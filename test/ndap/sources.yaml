@@ -1,0 +1,51 @@
+# NDAP Open API — one entry per GET pull. Copy exact query keys from the portal "Copy URL".
+# QA/production Copy URLs often use: ind, dim, pageno (not Indicators / Page No.).
+# Set enabled: true and replace PLACEHOLDER_* indicators when you have each Get API link.
+
+defaults:
+  api_key_param: API_Key
+  indicators_param: ind
+  page_param: pageno
+  page_start: 1
+  rows_per_page_hint: 1000
+  # Optional alternate keys if your Copy URL differs:
+  # state_code_param: "State Code"
+  # district_code_param: "District Code"
+
+sources:
+  - id: csr_district
+    title: "District-wise CSR (Dynamic CSR Report) — MCA"
+    enabled: true
+    indicators: I6008_6
+    output: csr_district.json
+    # base_url: null  # uses NDAP_BASE_URL from .env
+    extra_params:
+      dim: "Country,StateName,StateCode,DistrictName,DistrictCode,Year,D6008_4,D6008_5"
+
+  - id: groundwater_quality
+    title: "Groundwater quality indicators — Jal Shakti"
+    enabled: false
+    indicators: PLACEHOLDER_INDICATOR
+    output: groundwater_quality.json
+    extra_params: {}
+
+  - id: sbm_gramin_sanitation
+    title: "Swachh Bharat Mission (Gramin) sanitation metrics"
+    enabled: false
+    indicators: PLACEHOLDER_INDICATOR
+    output: sbm_gramin_sanitation.json
+    extra_params: {}
+
+  - id: lgd_master_districts
+    title: "Local Government Directory — master district codes"
+    enabled: false
+    indicators: PLACEHOLDER_INDICATOR
+    output: lgd_master_districts.json
+    extra_params: {}
+
+  - id: extra_01
+    title: "Optional fifth NDAP pull (e.g. split indicator)"
+    enabled: false
+    indicators: PLACEHOLDER_INDICATOR
+    output: extra_01.json
+    extra_params: {}
