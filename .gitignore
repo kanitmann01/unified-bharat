@@ -4,3 +4,4 @@ venv/
 __pycache__/
 *.py[cod]
 .pytest_cache/
+delete/  # Krit: This is a directory that contains files that should be deleted. It is not necessary to keep it in the repository. remove after final submission.
