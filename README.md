@@ -20,6 +20,80 @@ Python scripts and config to pull public datasets from India's NDAP Open API
 - `test/ndap_data/` - generated JSON and CSV outputs
 - `.env` - local secrets/config (not committed)
 - `.env.example` - template for required environment variables
+- `docker-compose.yaml` - local Spark, JupyterLab, and MinIO stack (S3-compatible storage)
+
+## Docker Compose (Spark, MinIO, JupyterLab)
+
+The stack is defined in [`docker-compose.yaml`](docker-compose.yaml). It pulls official images (`minio/minio`, `jupyter/all-spark-notebook`); there is no project-specific `Dockerfile`.
+
+### Prerequisites
+
+- [Docker](https://docs.docker.com/get-docker/) installed
+- [Docker Compose](https://docs.docker.com/compose/install/) (v2 is bundled with Docker Desktop as `docker compose`)
+
+### Step 1: Start the stack
+
+From the repository root, in Bash:
+
+```bash
+docker-compose up -d
+```
+
+On newer setups you can use:
+
+```bash
+docker compose up -d
+```
+
+Docker will download the images (first run only) and start the services in the background.
+
+| Service | Container name | Host ports |
+|--------|-----------------|------------|
+| MinIO (S3 API + console) | `minio_storage` | `9000` (API), `9001` (console) |
+| JupyterLab + Spark | `spark_compute` | `8888` (JupyterLab), `4040` (Spark UI) |
+
+### Step 2: Configure the storage lake (MinIO)
+
+Before Spark can write data, create the object storage bucket.
+
+1. Open a browser and go to [http://localhost:9001](http://localhost:9001) (MinIO Console).
+2. Sign in with the credentials from `docker-compose.yaml`:
+   - **User:** `admin`
+   - **Password:** `supersecretpassword`
+3. In the MinIO console, open **Buckets** in the left menu, then **Create Bucket**.
+4. Name the bucket **`unified-bharat`** and create it.
+
+The S3 API for tools that need an endpoint is available at `http://localhost:9000` (same credentials unless you change them in the compose file).
+
+### Step 3: JupyterLab and the PySpark / Iceberg workflow
+
+Connect Spark to MinIO using your notebooks (for example Apache Iceberg as the table format).
+
+1. Read the Spark/Jupyter container logs to get the JupyterLab URL and token:
+
+   ```bash
+   docker logs spark_compute
+   ```
+
+2. In the log output, find the line with a URL like `http://127.0.0.1:8888/lab?token=...` (or `http://localhost:8888/?token=...`).
+3. Open that URL in your browser and run your medallion pipeline notebooks from the mounted workspace (`./notebooks` on the host maps to `/home/jovyan/work` in the container).
+
+Host folders mounted into the notebook container:
+
+- `./notebooks` → `/home/jovyan/work`
+- `./data` → `/home/jovyan/data`
+
+### Stop the stack
+
+```bash
+docker-compose down
+```
+
+To remove named volumes as well (this deletes MinIO data stored in the `minio_data` volume):
+
+```bash
+docker-compose down -v
+```
 
 ## Prerequisites
 
