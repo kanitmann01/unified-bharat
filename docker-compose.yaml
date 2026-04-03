@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  # 1. Open Source Object Storage (Simulating AWS S3)
+  minio:
+    image: minio/minio
+    container_name: minio_storage
+    ports:
+      - "9000:9000" # API Port
+      - "9001:9001" # Web Console Port
+    environment:
+      MINIO_ROOT_USER: admin
+      MINIO_ROOT_PASSWORD: supersecretpassword
+    command: server /data --console-address ":9001"
+    volumes:
+      - minio_data:/data
+
+  # 2. Apache Spark & Jupyter Environment
+  spark:
+    image: jupyter/all-spark-notebook:spark-3.5.0
+    container_name: spark_compute
+    ports:
+      - "8888:8888" # JupyterLab Port
+      - "4040:4040" # Spark UI Port
+    environment:
+      JUPYTER_ENABLE_LAB: "yes"
+    volumes:
+      - ./notebooks:/home/jovyan/work
+      - ./data:/home/jovyan/data
+    depends_on:
+      - minio
+
+volumes:
+  minio_data:
