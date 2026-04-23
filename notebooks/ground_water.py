@@ -31,6 +31,43 @@ def calculate_contamination_index(row):
         score += 1
     return score
 
+def process_gold(df, base_dir):
+    print("Processing Gold Standard...")
+    # Make a copy to avoid SettingWithCopyWarning
+    gold_df = df.copy()
+    
+    # Drop columns with < 66% non-null values
+    threshold = 0.66 * len(gold_df)
+    cols_before = set(gold_df.columns)
+    gold_df.dropna(axis=1, thresh=threshold, inplace=True)
+    cols_after = set(gold_df.columns)
+    dropped_cols = cols_before - cols_after
+    if dropped_cols:
+        print(f"Dropped columns with < 66% data: {dropped_cols}")
+    
+    # Fill remaining missing values with average for numeric columns
+    for col in gold_df.columns:
+        if pd.api.types.is_numeric_dtype(gold_df[col]):
+            if gold_df[col].isnull().any():
+                avg_val = gold_df[col].mean()
+                gold_df[col] = gold_df[col].fillna(avg_val)
+                
+    # Drop rows if any missing data points remain in non-numeric columns
+    for col in gold_df.columns:
+        if not pd.api.types.is_numeric_dtype(gold_df[col]):
+            if gold_df[col].isnull().any():
+                gold_df.dropna(subset=[col], inplace=True)
+                
+    # Output to Gold
+    out_dir = os.path.join(base_dir, 'data', 'gold')
+    os.makedirs(out_dir, exist_ok=True)
+    out_path = os.path.join(out_dir, 'gold_groundwater_district_year.csv')
+    
+    print(f"Saving Gold format output to: {out_path}")
+    gold_df.to_csv(out_path, index=False)
+    print(f"Gold Process complete. Rows generated: {len(gold_df)}")
+    return gold_df
+
 def main():
     print("Loading datasets...")
     # Path resolution relative to this script inside "notebooks" directory
@@ -124,6 +161,9 @@ def main():
     print(f"Saving format output to: {out_path}")
     grouped.to_csv(out_path, index=False)
     print(f"Process complete. Rows generated: {len(grouped)}")
+
+    # Run Gold standard processing
+    process_gold(grouped, base_dir)
 
 if __name__ == "__main__":
     main()
