@@ -24,6 +24,9 @@ services:
       - "4040:4040" # Spark UI Port
     environment:
       JUPYTER_ENABLE_LAB: "yes"
+    command: >
+      bash -c "pip install geopandas matplotlib seaborn statsmodels scikit-learn xgboost shapely linearmodels &&
+      start-notebook.sh --NotebookApp.token='' --NotebookApp.password=''"
     volumes:
       - ./notebooks:/home/jovyan/work
       - ./data:/home/jovyan/data
