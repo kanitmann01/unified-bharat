@@ -114,7 +114,7 @@ local.bronze.population        # 36 rows
 
 ### Silver Layer: Cleaning & Standardization
 
-#### 💰 CSR → `local.silver.csr_state_year`
+####  CSR → `local.silver.csr_state_year`
 
 ```
 Input:  28,834 rows (district-year)
@@ -134,7 +134,7 @@ Retention:  ~1.4%
 
 ---
 
-#### 💧 Groundwater → `local.silver.groundwater_state_year`
+####  Groundwater → `local.silver.groundwater_state_year`
 
 ```
 Input:  188,209 rows (station-level, 29 columns)
@@ -167,7 +167,7 @@ Retention:  ~0.4%
 
 ---
 
-#### 🎓 Institutions → `local.silver.institutions_state_year`
+####  Institutions → `local.silver.institutions_state_year`
 
 ```
 Input:   2,141 rows (state-institution-type-year)
@@ -207,7 +207,7 @@ Retention: 100% (column drop + fill)
 
 ---
 
-#### 🏆 Unified Panel → `local.gold.state_year_panel`
+####  Unified Panel → `local.gold.state_year_panel`
 
 ```
 Input:  Silver tables (~1,550 total rows)
