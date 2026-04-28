@@ -1,6 +1,6 @@
 # 🏛️ Unified Bharat: Cross-Sector Policy Analytics Lakehouse
 
-> **Medallion Architecture for District-Level CSR, Groundwater & Institutional Data Integration**
+> **Medallion Architecture for State-Level CSR, Groundwater & Institutional Data Integration**
 
 [![Python 3.11](https://img.shields.io/badge/python-3.11-blue.svg)](https://www.python.org/downloads/)
 [![Apache Spark 3.5](https://img.shields.io/badge/Spark-3.5-orange.svg)](https://spark.apache.org/)
@@ -28,17 +28,17 @@
 
 ## Overview
 
-**Unified Bharat** is a distributed Lakehouse architecture that integrates cross-ministry datasets at the district-year level to analyze the relationship between:
+**Unified Bharat** is a distributed Lakehouse architecture that integrates cross-ministry datasets at the state-year level to analyze the relationship between:
 
-- 💰 **Corporate Social Responsibility (CSR)** spending
-- 💧 **Groundwater quality** indicators
-- 🎓 **Educational institutions** metrics
+-  **Corporate Social Responsibility (CSR)** spending
+-  **Groundwater quality** indicators
+-  **Educational institutions** metrics
 
 ### Research Question
 
-> *Does subsequent improvement in groundwater quality associate with district-level CSR spending?*
+> *Does subsequent improvement in groundwater quality associate with state-level CSR spending?*
 
-The system conducts rigorous panel analysis while handling district and year fixed effects using a standard two-way fixed effects regression model.
+The system conducts rigorous panel analysis while handling state and year fixed effects using a standard two-way fixed effects regression model.
 
 ---
 
